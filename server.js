@@ -11,6 +11,8 @@ const scanProjects = (path = 'chongyang/workspace') => {
 http.createServer((request, response) => {
     const [path, queryStr = ''] = request.url.split('?');
     const query = qs.parse(queryStr);
+    response.setHeader('Access-Control-Allow-Origin', '*');
+    
     try {
       if (path === '/refresh') {
         const res = {
