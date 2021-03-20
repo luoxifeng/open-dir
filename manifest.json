@@ -1,6 +1,6 @@
 {
   "manifest_version": 2,
-  "name": "RushGo",
+  "name": "OpenDir",
   "version": "0.0.2",
   "description": "auto open",
   "icons": {
@@ -13,7 +13,7 @@
   },
   "browser_action": {
     "default_icon": "icons/enabled.png",
-    "default_title": "RushGo",
+    "default_title": "OpenDir",
     "default_popup": "popups/enabled.html"
   },
   "content_scripts": [
