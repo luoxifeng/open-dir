@@ -8,6 +8,8 @@ function getCurrentTabId(callback) {
 getCurrentTabId(id => {
   // const bg = chrome.extension.getBackgroundPage();
 
+  const isSameRole = e => e.target.dataset.role === e.dataTransfer.getData('dragRole')
+
   const app = new Vue({
     el: '#app',
     data() {
@@ -18,6 +20,8 @@ getCurrentTabId(id => {
         error: '',
         doing: false,
         projects: [],
+        dragRole: '',
+        dragName: '',
       };
     },
     methods: {
@@ -51,6 +55,42 @@ getCurrentTabId(id => {
           .catch(error => {
             alert(`请检查服务: ${error}`);
           })
+      },
+      dragstart(ev) {
+        console.log('dragstart', ev.target, ev.srcElement)
+
+        console.log('dragstart', ev.target.dataset, ev.target.dataset.name)
+
+        this.dragRole = ev.target.dataset.role;
+        this.dragName = ev.target.dataset.name;
+
+        ev.dataTransfer.dropEffect = "copy";
+        ev.dataTransfer.setData("dragRole", this.dragRole);
+        ev.dataTransfer.setData("dragName", this.dragName);
+
+        // console.log(ev, 'dragstart')
+      },
+      dragend() {
+        this.dragInfo = {
+          role: '',
+          name: ''
+        };
+      },
+      dragover(ev) {
+        ev.preventDefault();
+        ev.dataTransfer.dropEffect = "copy";
+        console.log(ev, 'dragover')
+      },
+      drop(ev) {
+        console.log(ev, 'drop')
+
+        console.log(ev.dataTransfer.getData('dragRole'))
+        console.log(ev.dataTransfer.getData('dragName'))
+
+        if (isSameRole(ev)) {
+          console.log('isSameRole', 'drop')
+        }
+        console.log(ev, 'drop')
       }
     },
     created() {
