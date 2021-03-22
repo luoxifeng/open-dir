@@ -14,6 +14,7 @@ getCurrentTabId(id => {
       return {
         code: false,
         webstorm: false,
+        sublime: false,
         error: '',
         doing: false,
         projects: [],
@@ -42,11 +43,14 @@ getCurrentTabId(id => {
         // this.doing = true;
         this.error = '';
         window.fetch(`http://localhost:21319/open?project=${project}&tool=${tool}`)
-          .catch(error => {
-            this.error = `请检查服务: ${error}`
+          .then(function (response) {                      // first then()
+            if (response.ok) {
+              return response.text();
+            }
+            response.text().then(alert);
           })
-          .finally(() => {
-            // this.doing = false;
+          .catch(error => {
+            alert(`请检查服务: ${error}`);
           })
       }
     },
@@ -54,7 +58,7 @@ getCurrentTabId(id => {
       this.refresh();
     },
     mounted() {
-     
+
     }
   })
 })

@@ -12,6 +12,7 @@ http.createServer((request, response) => {
     const [path, queryStr = ''] = request.url.split('?');
     const query = qs.parse(queryStr);
     response.setHeader('Access-Control-Allow-Origin', '*');
+    response.setHeader('Content-Type', 'application/json;charset=UTF-8');
     
     try {
       if (path === '/refresh') {
@@ -24,15 +25,14 @@ http.createServer((request, response) => {
           child.execSync(`code --version`)
         } catch (error) {
           res.code = false;
+          console.error(error);
         }
         try {
           child.execSync(`webstorm --version`)
         } catch (error) {
           res.webstorm = false;
+          console.error(error);
         }
-        console.log(res);
-
-        response.setHeader('Content-Type', 'application/json;charset=UTF-8');
         console.log(JSON.stringify(res));
 
         return response.end(JSON.stringify(res))

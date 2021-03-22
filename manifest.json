@@ -14,7 +14,7 @@
   "browser_action": {
     "default_icon": "icons/logo.png",
     "default_title": "OpenDir",
-    "default_popup": "popups/enabled.html"
+    "default_popup": "popups/popups.html"
   },
   "content_scripts": [
     {
