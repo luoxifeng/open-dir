@@ -40,7 +40,6 @@ getCurrentTabId(id => {
           })
       },
       open(project, tool) {
-        // this.doing = true;
         this.error = '';
         window.fetch(`http://localhost:21319/open?project=${project}&tool=${tool}`)
           .then(function (response) {                      // first then()

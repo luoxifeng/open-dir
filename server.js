@@ -50,7 +50,14 @@ http.createServer((request, response) => {
           child.execSync(`${query.tool} ~/workspace/${query.project}`)
         } catch (error) {
           response.statusCode = 500;
-          return response.end(`项目打开失败：${error.message}`, )
+          const err = [
+            `项目打开失败:`,
+            error.message,
+            '可能是有以下原因：',
+            '1. 你电脑上没有安装相应的程序',
+            '2. 程序已经安装，没有配置环境变量',
+          ]
+          return response.end(err.join('\n'))
         }
         return response.end('项目已经打开')
       }
