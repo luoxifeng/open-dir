@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"
+    />
+    <title></title>
+    <style>
+      .app {
+        width: 300px;
+      }
+    </style>
+  </head>
+  <body>
+    <section id="app" class="app">
+      <div>
+        <label>目录</label>
+        <input type="input" placeholder="请输入工作空间目录" v-model="dir" />
+        <button @click="store">存储</button>
+      </div>
+      <div>
+        <label>已配置工作空间</label>
+        <span>{{chcheDir}}</span>
+      </div>
+    </section>
+    <script src="../js/vue.min.js"></script>
+    <script src="./options.js"></script>
+  </body>
+</html>
