@@ -157,100 +157,97 @@
       <section class="list">
         <div v-if="doing">请求项目列表中，请稍等</div>
         <div v-else-if="error">{{error}}</div>
-
-        <div v-else class="project-block">
-          <div class="project-block-tools">
-            <a
-              data-role="tool"
-              data-name="open"
-              draggable
-              @dragstart="dragstart"
-              @dragend="dragend"
-              @dragover="dragover"
-              @drop='drop'
-              :class="{
-                disabled: dragRole === 'tool' && dragName !== 'open',
-                scale: dragRole !== 'tool' && dropName === 'open',
-              }"
-            >
-              <img src='../icons/folder.png' class="tool-icon">
-            </a>
-            <a
-              v-if="code"
-              data-role="tool"
-              data-name="code"
-              draggable
-              @dragstart="dragstart"
-              @dragend="dragend"
-              @dragover="dragover"
-              @drop='drop'
-              :class="{
-                disabled: dragRole === 'tool' && dragName !== 'code',
-                scale: dragRole !== 'tool' && dropName === 'code',
-              }"
-            >
-              <img src='../icons/vscode.png' class="tool-icon">
-            </a>
-            <a
-              data-role="tool"
-              data-name="webstorm"
-              draggable
-              @dragstart="dragstart"
-              @dragend="dragend"
-              @dragover="dragover"
-              @drop='drop'
-              :class="{
-                disabled: dragRole === 'tool' && dragName !== 'webstorm',
-                scale: dragRole !== 'tool' && dropName === 'webstorm',
-              }"
-            >
-              <img src='../icons/webstorm.png' class="tool-icon">
-            </a>
-            <a
-              data-role="tool"
-              data-name="sublime"
-              draggable
-              @dragstart="dragstart"
-              @dragend="dragend"
-              @dragover="dragover"
-              @drop='drop'
-              style='height:52px'
-              :class="{
-                disabled: dragRole === 'tool' && dragName !== 'sublime',
-                scale: dragRole !== 'tool' && dropName === 'sublime',
-              }"
-            >
-              <img src='../icons/sublime.png' class="tool-icon">
-            </a>
-          </div>
-          <div class='project-block-tags'>
-            <div class='project-tags'>
-              <div
-                v-for="(t, i) in projects"
-                :key='i'
-                class="project-tag"
-                data-role="project"
-                :data-name="t"
+        <template v-else>
+          <div v-if="!code && !webstorm ">在你的机器上未检查到可以打开项目的工具，请安装或者检查环境变量</div>
+          <div v-if="projects.length === 0">项目列表为空，请刷新或者检查工作空间</div>
+          <div v-else-if="uiType === 'drag'" class="project-block">
+            <div class="project-block-tools">
+              <a
+                data-role="tool"
+                data-name="open"
                 draggable
                 @dragstart="dragstart"
                 @dragend="dragend"
                 @dragover="dragover"
                 @drop='drop'
                 :class="{
-                  disabled: dragRole === 'project' && dragName !== t,
-                  shadow: dragRole !== 'project' && dropName === t,
+                  disabled: dragRole === 'tool' && dragName !== 'open',
+                  scale: dragRole !== 'tool' && dropName === 'open',
                 }"
               >
-                {{t}}
+                <img src='../icons/folder.png' class="tool-icon">
+              </a>
+              <a
+                v-if="code"
+                data-role="tool"
+                data-name="code"
+                draggable
+                @dragstart="dragstart"
+                @dragend="dragend"
+                @dragover="dragover"
+                @drop='drop'
+                :class="{
+                  disabled: dragRole === 'tool' && dragName !== 'code',
+                  scale: dragRole !== 'tool' && dropName === 'code',
+                }"
+              >
+                <img src='../icons/vscode.png' class="tool-icon">
+              </a>
+              <a
+                data-role="tool"
+                data-name="webstorm"
+                draggable
+                @dragstart="dragstart"
+                @dragend="dragend"
+                @dragover="dragover"
+                @drop='drop'
+                :class="{
+                  disabled: dragRole === 'tool' && dragName !== 'webstorm',
+                  scale: dragRole !== 'tool' && dropName === 'webstorm',
+                }"
+              >
+                <img src='../icons/webstorm.png' class="tool-icon">
+              </a>
+              <a
+                data-role="tool"
+                data-name="sublime"
+                draggable
+                @dragstart="dragstart"
+                @dragend="dragend"
+                @dragover="dragover"
+                @drop='drop'
+                style='height:52px'
+                :class="{
+                  disabled: dragRole === 'tool' && dragName !== 'sublime',
+                  scale: dragRole !== 'tool' && dropName === 'sublime',
+                }"
+              >
+                <img src='../icons/sublime.png' class="tool-icon">
+              </a>
+            </div>
+            <div class='project-block-tags'>
+              <div class='project-tags'>
+                <div
+                  v-for="(t, i) in projects"
+                  :key='i'
+                  class="project-tag"
+                  data-role="project"
+                  :data-name="t"
+                  draggable
+                  @dragstart="dragstart"
+                  @dragend="dragend"
+                  @dragover="dragover"
+                  @drop='drop'
+                  :class="{
+                    disabled: dragRole === 'project' && dragName !== t,
+                    shadow: dragRole !== 'project' && dropName === t,
+                  }"
+                >
+                  {{t}}
+                </div>
               </div>
             </div>
           </div>
-          
-        </div>
-        
-        <!-- <template v-else>
-          <div v-if="!code && !webstorm">在你的机器上未检查到可以打开项目的工具，请安装或者检查环境变量</div>
-          <div v-if="projects.length === 0">项目列表为空，请刷新或者检查工作空间</div>
           <table v-else border='1' cellspacing='0'>
             <thead>
               <tr>
@@ -284,8 +281,7 @@
               </tr>
             </tbody>
           </table>
-       
-        </template> -->
+        </template>
       
       </section>
     </section>

@@ -18,6 +18,7 @@ getCurrentTabId(id => {
     el: '#app',
     data() {
       return {
+        uiType: 'table',
         code: false,
         webstorm: false,
         sublime: false,
@@ -26,7 +27,6 @@ getCurrentTabId(id => {
         projects: [],
         dragRole: '',
         dragName: '',
-        // dropRole: '',
         dropName: '',
       };
     },
