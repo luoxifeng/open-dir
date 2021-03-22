@@ -7,9 +7,13 @@ function getCurrentTabId(callback) {
 
 getCurrentTabId(id => {
   // const bg = chrome.extension.getBackgroundPage();
-
-  const isSameRole = e => e.target.dataset.role === e.dataTransfer.getData('dragRole')
-
+  const getDragTarget = e => {
+    let target = e.target;
+    if (target.tagName ===  'IMG') target = e.target.parentElement
+    return target;
+  };
+  const isSameRole = e => getDragTarget(e).dataset.role === e.dataTransfer.getData('dragRole')
+  
   const app = new Vue({
     el: '#app',
     data() {
@@ -22,6 +26,8 @@ getCurrentTabId(id => {
         projects: [],
         dragRole: '',
         dragName: '',
+        // dropRole: '',
+        dropName: '',
       };
     },
     methods: {
@@ -44,6 +50,7 @@ getCurrentTabId(id => {
           })
       },
       open(project, tool) {
+        console.log(`%copen: %cproject=${project} tool=${tool}`,  'background: #222; color: #bada55', 'color: blue');
         this.error = '';
         window.fetch(`http://localhost:21319/open?project=${project}&tool=${tool}`)
           .then(function (response) {                      // first then()
@@ -56,41 +63,46 @@ getCurrentTabId(id => {
             alert(`请检查服务: ${error}`);
           })
       },
-      dragstart(ev) {
-        console.log('dragstart', ev.target, ev.srcElement)
+      dragstart(e) {
+        let target = getDragTarget(e);
+        console.log('dragstart', target.dataset, target.dataset.name)
 
-        console.log('dragstart', ev.target.dataset, ev.target.dataset.name)
+        this.dragRole = target.dataset.role;
+        this.dragName = target.dataset.name;
 
-        this.dragRole = ev.target.dataset.role;
-        this.dragName = ev.target.dataset.name;
-
-        ev.dataTransfer.dropEffect = "copy";
-        ev.dataTransfer.setData("dragRole", this.dragRole);
-        ev.dataTransfer.setData("dragName", this.dragName);
-
-        // console.log(ev, 'dragstart')
+        e.dataTransfer.dropEffect = "move";
+        e.dataTransfer.setData("dragRole", this.dragRole);
+        e.dataTransfer.setData("dragName", this.dragName);
       },
-      dragend() {
-        this.dragInfo = {
-          role: '',
-          name: ''
-        };
-      },
-      dragover(ev) {
-        ev.preventDefault();
-        ev.dataTransfer.dropEffect = "copy";
-        console.log(ev, 'dragover')
-      },
-      drop(ev) {
-        console.log(ev, 'drop')
+      dragover(e) {
+        e.preventDefault();
 
-        console.log(ev.dataTransfer.getData('dragRole'))
-        console.log(ev.dataTransfer.getData('dragName'))
+        if (isSameRole(e)) return;
+        const dataset = getDragTarget(e).dataset;
+        e.dataTransfer.dropEffect = "move";
+        this.dropName = dataset.name;
+        console.log('dragover', this.dropRole, this.dropName)
+      },
+      dragend(e) {
+        e.preventDefault();
+        this.dragRole = '';
+        this.dragName = '';
+        this.dropRole = '';
+        this.dropName = '';
+      },
+      drop(e) {
+        const target = getDragTarget(e);
+        console.log(e, 'drop')
+        if (isSameRole(e)) return;
 
-        if (isSameRole(ev)) {
-          console.log('isSameRole', 'drop')
+        const dragRole = e.dataTransfer.getData('dragRole');
+        const dragName = e.dataTransfer.getData('dragName');
+        if (dragRole === 'tool') {
+          this.open(target.dataset.name, dragName);
+        } else {
+          this.open(dragName, target.dataset.name);
         }
-        console.log(ev, 'drop')
+        // console.log(ev.dataTransfer.getData('dragName'))
       }
     },
     created() {
