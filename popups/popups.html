@@ -14,6 +14,8 @@
 
       .list {
         height: 400px;
+        overflow-y: auto;
+        overflow-x: hidden;
       }
 
       ul {
@@ -274,7 +276,7 @@
                       <img src='../icons/webstorm.png' class="tool-icon">
                     </a>
                     <a v-if="!sublime" @click="open(t, 'sublime')" title="使用sublime打开">
-                      <img src='../icons/sublime.png' class="tool-icon">
+                      <img src='../icons/sublime.png' class="tool-icon" >
                     </a>
                   </div>
                 </td>
