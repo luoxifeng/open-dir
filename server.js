@@ -3,8 +3,8 @@ const fs = require('fs');
 const http = require('http');
 const qs = require('querystring');
 
-const scanProjects = (path = 'chongyang/workspace') => {
-  let projects = fs.readdirSync(`/Users/${path}`);
+const scanProjects = (paths = ['chongyang/workspace', 'chongyang/github']) => {
+  let projects = paths.reduce((acc, curr) => [...acc, ...fs.readdirSync(`/Users/${curr}`)], [])
   return projects ? projects.filter(t => !t.startsWith('.')) : [];
 }
 
