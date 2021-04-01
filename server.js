@@ -3,11 +3,22 @@ const fs = require('fs');
 const http = require('http');
 const qs = require('querystring');
 const chalk = require('chalk');
+
 const DEFAULT_PATHS = ['chongyang/workspace', 'chongyang/github']
+const FILE_NAME = './store.json'
+const readStore = () => {
+  let store = {};
+  try {
+    store = JSON.parse(fs.readFileSync(FILE_NAME).toString())
+  } catch (error) {}
+  return store;
+}
+
 
 http.createServer((request, response) => {
     const [path, queryStr = ''] = request.url.split('?');
     const query = qs.parse(queryStr);
+    const store = readStore();
     response.setHeader('Access-Control-Allow-Origin', '*');
     response.setHeader('Content-Type', 'application/json;charset=UTF-8');
     response.statusCode = 500;
@@ -58,6 +69,7 @@ http.createServer((request, response) => {
                   .filter(t => !t.startsWith('.') && fs.statSync(`${curr}/${t}`).isDirectory())
               ]
             }, [])
+            .sort((a, b) => -(store[a] || 0) - (store[b] || 0))
           log(`Scan out these projects:\n${chalk.yellow(JSON.stringify(res.projects, null, 2))}`)
         } catch (error) {
           log(`Scan projects error:\n${chalk.red(error.message)}`)
@@ -73,12 +85,21 @@ http.createServer((request, response) => {
        * 打开项目
        */
       if (path === '/open') {
-        if (!query.project) {
-          return response.end('缺少project参数')
+        const { project, tool } = query;
+        if (!project) return response.end('缺少project参数')
+        if (!tool) return response.end('缺少tool参数')
+
+        /**
+         * update store
+         */
+        
+        store[project] = (store[project] || 0) + 1;
+        try {
+          fs.writeFileSync(FILE_NAME, JSON.stringify(store, null, 2))
+        } catch (error) {
+
         }
-        if (!query.tool) {
-          return response.end('缺少tool参数')
-        }
+       
   
         try {
           child.execSync(`${query.tool} ~/workspace/${query.project}`)
