@@ -38,13 +38,17 @@ getCurrentTabId(id => {
         this.projects = [];
         window.fetch('http://localhost:21319/refresh')
           .then((res) => {
+            if (res.status !== 200) {
+              return res.text().then(Promise.reject.bind(Promise));
+            }
+            
             return res.json()
           })
           .then(data => {
             Object.assign(this, data)
           })
           .catch(error => {
-            this.error = `请检查服务: ${error}`
+            this.error = error
           })
           .finally(() => {
             this.doing = false;

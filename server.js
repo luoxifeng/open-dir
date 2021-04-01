@@ -49,18 +49,22 @@ http.createServer((request, response) => {
         // scan projects list
         try {
           const paths = DEFAULT_PATHS.map(p => `/Users/${p}`)
-          log(`Scaning projects list in paths:\n ${chalk.yellow(JSON.stringify(paths, null, 2))}`)
+          log(`Scaning projects list in paths:\n${chalk.yellow(JSON.stringify(paths, null, 2))}`)
           res.projects = paths
-            .reduce((acc, curr) => [...acc, ...fs.readdirSync(curr)], [])
-            .filter(t => !t.startsWith('.') )
-            // && fs.statSync(t).isDirectory()
-          log(`Scan out these projects`)
+            .reduce((acc, curr) => {
+              return [
+                ...acc,
+                ...fs.readdirSync(curr)
+                  .filter(t => !t.startsWith('.') && fs.statSync(`${curr}/${t}`).isDirectory())
+              ]
+            }, [])
+          log(`Scan out these projects:\n${chalk.yellow(JSON.stringify(res.projects, null, 2))}`)
         } catch (error) {
+          log(`Scan projects error:\n${chalk.red(error.message)}`)
           return response.end(`服务出错，请检查服务: ${error.message}`)
         }
-       
-        console.log(`%c${JSON.stringify(res, null, 2)}`, 'color: red');
 
+        log(`${chalk.green('Success')}`)
         response.statusCode = 200;
         return response.end(JSON.stringify(res))
       } 
