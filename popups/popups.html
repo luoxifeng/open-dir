@@ -96,11 +96,14 @@
         float: left;
         font-size: 16px;
         padding: 5px 10px;
-        border: 1px solid #8f8f8f;
+        border: 1px solid #000;
         border-radius: 10px;
         margin: 5px;
-        background: #e1e1e1;
-        color: #2c2c2c;
+        color: #fff;
+      }
+
+      .project-tag:hover {
+        box-shadow: 0 0 10px ;
       }
 
       .project-tag.shadow {
@@ -110,8 +113,48 @@
       .project-tag.disabled {
         background: #c9c9c9;
         filter: opacity(0.2);
-        /* color: */
       }
+     
+      .project-tag.hot {
+        background-color: #f22d2f;
+        border-color: #f22d2f;
+        box-shadow: 0 1px 5px #f22d2f;
+      }
+
+      .project-tag.hot:hover {
+        box-shadow: 0 0 10px #f22d2f;
+      }
+
+      .project-tag.warm {
+        background-color: #FF8C00;
+        border-color: #FF8C00;
+        box-shadow: 0 1px 5px #FF8C00;
+      }
+
+      .project-tag.warm:hover {
+        box-shadow: 0 0 10px #FF8C00;
+      }
+
+      .project-tag.cold {
+        background-color: #1890ff;
+        border-color: #1890ff;
+        box-shadow: 0 1px 5px #1890ff;
+      }
+
+      .project-tag.cold:hover {
+        box-shadow: 0 0 10px #1890ff;
+      }
+
+      .project-tag.freez {
+        background-color: #888888;
+        border-color: #888888;
+        box-shadow: 0 1px 5px #888888;
+      }
+
+      .project-tag.freez:hover {
+        box-shadow: 0 0 10px #888888;
+      }
+
 
       .project-name {
         font-size: 18px;
@@ -166,15 +209,15 @@
             <div class="project-block-tools">
               <a
                 data-role="tool"
-                data-name="open"
+                data-value="open"
                 draggable
                 @dragstart="dragstart"
                 @dragend="dragend"
                 @dragover="dragover"
                 @drop='drop'
                 :class="{
-                  disabled: dragRole === 'tool' && dragName !== 'open',
-                  scale: dragRole !== 'tool' && dropName === 'open',
+                  disabled: dragRole === 'tool' && dragValue !== 'open',
+                  scale: dragRole !== 'tool' && dropValue === 'open',
                 }"
               >
                 <img src='../icons/folder.png' class="tool-icon">
@@ -182,37 +225,37 @@
               <a
                 v-if="code"
                 data-role="tool"
-                data-name="code"
+                data-value="code"
                 draggable
                 @dragstart="dragstart"
                 @dragend="dragend"
                 @dragover="dragover"
                 @drop='drop'
                 :class="{
-                  disabled: dragRole === 'tool' && dragName !== 'code',
-                  scale: dragRole !== 'tool' && dropName === 'code',
+                  disabled: dragRole === 'tool' && dragValue !== 'code',
+                  scale: dragRole !== 'tool' && dropValue === 'code',
                 }"
               >
                 <img src='../icons/vscode.png' class="tool-icon">
               </a>
               <a
                 data-role="tool"
-                data-name="webstorm"
+                data-value="webstorm"
                 draggable
                 @dragstart="dragstart"
                 @dragend="dragend"
                 @dragover="dragover"
                 @drop='drop'
                 :class="{
-                  disabled: dragRole === 'tool' && dragName !== 'webstorm',
-                  scale: dragRole !== 'tool' && dropName === 'webstorm',
+                  disabled: dragRole === 'tool' && dragValue !== 'webstorm',
+                  scale: dragRole !== 'tool' && dropValue === 'webstorm',
                 }"
               >
                 <img src='../icons/webstorm.png' class="tool-icon">
               </a>
               <a
                 data-role="tool"
-                data-name="sublime"
+                data-value="sublime"
                 draggable
                 @dragstart="dragstart"
                 @dragend="dragend"
@@ -220,8 +263,8 @@
                 @drop='drop'
                 style='height:52px'
                 :class="{
-                  disabled: dragRole === 'tool' && dragName !== 'sublime',
-                  scale: dragRole !== 'tool' && dropName === 'sublime',
+                  disabled: dragRole === 'tool' && dragValue !== 'sublime',
+                  scale: dragRole !== 'tool' && dropValue === 'sublime',
                 }"
               >
                 <img src='../icons/sublime.png' class="tool-icon">
@@ -234,19 +277,22 @@
                   :key='i'
                   class="project-tag"
                   data-role="project"
-                  :data-name="t.name"
+                  :data-value="t.path"
                   draggable
                   @dragstart="dragstart"
                   @dragend="dragend"
                   @dragover="dragover"
                   @drop='drop'
-                  :class="{
-                    disabled: dragRole === 'project' && dragName !== t.name,
-                    shadow: dragRole !== 'project' && dropName === t.name,
-                  }"
+                  :class="[
+                    {
+                      disabled: dragRole === 'project' && dragValue !== t.path,
+                      shadow: dragRole !== 'project' && dropValue === t.path,
+                    },
+                    t.hot
+                  ]"
                   :title="`访问次数：${t.count}`"
                 >
-                  {{t.name}}|{{t.hot}}
+                  {{t.name}}
                 </div>
               </div>
             </div>
@@ -267,16 +313,16 @@
                 </td>
                 <td>
                   <div class="oper-group">
-                    <a @click="open(t.name, 'open')" title="打开文件夹">
+                    <a @click="open(t.path, 'open')" title="打开文件夹">
                       <img src='../icons/folder.png' class="tool-icon">
                     </a>
-                    <a v-if="code" @click="open(t.name, 'code')" title="使用vscode打开" >
+                    <a v-if="code" @click="open(t.path, 'code')" title="使用vscode打开" >
                       <img src='../icons/vscode.png' class="tool-icon">
                     </a>
-                    <a v-if="!webstorm" @click="open(t.name, 'webstorm')" title="使用webstorm打开">
+                    <a v-if="!webstorm" @click="open(t.path, 'webstorm')" title="使用webstorm打开">
                       <img src='../icons/webstorm.png' class="tool-icon">
                     </a>
-                    <a v-if="!sublime" @click="open(t.name, 'sublime')" title="使用sublime打开">
+                    <a v-if="!sublime" @click="open(t.path, 'sublime')" title="使用sublime打开">
                       <img src='../icons/sublime.png' class="tool-icon" >
                     </a>
                   </div>

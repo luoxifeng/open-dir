@@ -83,16 +83,18 @@ http.createServer((request, response) => {
                 ...acc,
                 ...fs.readdirSync(curr)
                   .filter(t => !t.startsWith('.') && fs.statSync(`${curr}/${t}`).isDirectory())
+                  .map(name => {
+                    const path = `${curr}/${name}`;
+                    const count = store[path] || 0;
+                    counts.push(count)
+                    return {
+                      name,
+                      count,
+                      path
+                    }
+                  })
               ]
             }, [])
-            .map(name => {
-              const count = store[name] || 0;
-              counts.push(count)
-              return {
-                name,
-                count,
-              }
-            })
             .map((t, i) => {
               if (!i) getHotLevel = createHotLevel(counts);
               return {
@@ -117,15 +119,15 @@ http.createServer((request, response) => {
        * 打开项目
        */
       if (path === '/open') {
-        const { project, tool } = query;
-        if (!project) return response.end('缺少project参数')
+        const { path, tool } = query;
+        if (!path) return response.end('缺少path参数')
         if (!tool) return response.end('缺少tool参数')
 
         /**
          * update store
          */
         
-        store[project] = (store[project] || 0) + 1;
+        store[path] = (store[path] || 0) + 1;
         try {
           fs.writeFileSync(FILE_NAME, JSON.stringify(store, null, 2))
         } catch (error) {
@@ -134,7 +136,7 @@ http.createServer((request, response) => {
        
   
         try {
-          child.execSync(`${query.tool} ~/workspace/${query.project}`)
+          child.execSync(`${tool} ${query.path}`)
         } catch (error) {
           const err = [
             `项目打开失败:`,
@@ -160,3 +162,22 @@ http.createServer((request, response) => {
   .listen(21319, () => {
     console.log('服务已启动');
   })
+
+
+function curry(fn, ...list) {
+  const l = fn.length;
+  return (...args) => {
+    const k = [...list, ...args];
+    if (list.length >= l) return fn(...list)
+    curry(fn, ...args, ...list)
+  }
+}
+
+ function sum(a, b, c, d) {
+   return a + b + c + d;
+ }
+
+ curry(sum, 1,2,3, 4)
+ curry(sum)(1,2)(3, 4, 5)
+
+

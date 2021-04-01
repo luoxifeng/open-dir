@@ -27,8 +27,8 @@ getCurrentTabId(id => {
         doing: false,
         projects: [],
         dragRole: '',
-        dragName: '',
-        dropName: '',
+        dragValue: '',
+        dropValue: '',
       };
     },
     methods: {
@@ -54,10 +54,10 @@ getCurrentTabId(id => {
             this.doing = false;
           })
       },
-      open(project, tool) {
-        console.log(`%copen: %cproject=${project} tool=${tool}`,  'background: #222; color: #bada55', 'color: blue');
+      open(path, tool) {
+        console.log(`%copen: %cpath=${path} tool=${tool}`,  'background: #222; color: #bada55', 'color: blue');
         this.error = '';
-        window.fetch(`http://localhost:21319/open?project=${project}&tool=${tool}`)
+        window.fetch(`http://localhost:21319/open?path=${path}&tool=${tool}`)
           .then(function (response) {                      // first then()
             if (response.ok) {
               return response.text();
@@ -70,14 +70,14 @@ getCurrentTabId(id => {
       },
       dragstart(e) {
         let target = getDragTarget(e);
-        console.log('dragstart', target.dataset, target.dataset.name)
+        console.log('dragstart', target.dataset, target.dataset.value)
 
         this.dragRole = target.dataset.role;
-        this.dragName = target.dataset.name;
+        this.dragValue = target.dataset.value;
 
         e.dataTransfer.dropEffect = "move";
         e.dataTransfer.setData("dragRole", this.dragRole);
-        e.dataTransfer.setData("dragName", this.dragName);
+        e.dataTransfer.setData("dragValue", this.dragValue);
       },
       dragover(e) {
         e.preventDefault();
@@ -85,15 +85,15 @@ getCurrentTabId(id => {
         if (isSameRole(e)) return;
         const dataset = getDragTarget(e).dataset;
         e.dataTransfer.dropEffect = "move";
-        this.dropName = dataset.name;
-        console.log('dragover', this.dropRole, this.dropName)
+        this.dropValue = dataset.value;
+        console.log('dragover', this.dropRole, this.dropValue)
       },
       dragend(e) {
         e.preventDefault();
         this.dragRole = '';
-        this.dragName = '';
+        this.dragValue = '';
         this.dropRole = '';
-        this.dropName = '';
+        this.dropValue = '';
       },
       drop(e) {
         const target = getDragTarget(e);
@@ -101,13 +101,12 @@ getCurrentTabId(id => {
         if (isSameRole(e)) return;
 
         const dragRole = e.dataTransfer.getData('dragRole');
-        const dragName = e.dataTransfer.getData('dragName');
+        const dragValue = e.dataTransfer.getData('dragValue');
         if (dragRole === 'tool') {
-          this.open(target.dataset.name, dragName);
+          this.open(target.dataset.value, dragValue);
         } else {
-          this.open(dragName, target.dataset.name);
+          this.open(dragValue, target.dataset.value);
         }
-        // console.log(ev.dataTransfer.getData('dragName'))
       }
     },
     created() {
