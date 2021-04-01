@@ -2,54 +2,83 @@ const child = require('child_process');
 const fs = require('fs');
 const http = require('http');
 const qs = require('querystring');
-
-const scanProjects = (paths = ['chongyang/workspace', 'chongyang/github']) => {
-  let projects = paths.reduce((acc, curr) => [...acc, ...fs.readdirSync(`/Users/${curr}`)], [])
-  return projects ? projects.filter(t => !t.startsWith('.')) : [];
-}
+const chalk = require('chalk');
+const DEFAULT_PATHS = ['chongyang/workspace', 'chongyang/github']
 
 http.createServer((request, response) => {
     const [path, queryStr = ''] = request.url.split('?');
     const query = qs.parse(queryStr);
     response.setHeader('Access-Control-Allow-Origin', '*');
     response.setHeader('Content-Type', 'application/json;charset=UTF-8');
+    response.statusCode = 500;
     
     try {
+      /**
+       * 刷新项目列表
+       */
       if (path === '/refresh') {
+        const log = (msg = 'Start') => console.log(chalk.cyanBright(`Refresh Projects List: ${msg}`));
+        
+        log();
         const res = {
           code: true,
           webstorm: true,
-          projects: scanProjects(),
+          projects: [],
         };
+
+        // check vscode
         try {
+          log(`Check if vscode is installed`)
           child.execSync(`code --version`)
+          log(`Vscode is installed`)
         } catch (error) {
           res.code = false;
-          console.error(error);
+          log(chalk.redBright(`VSCcode is not installed`))
         }
+
+        // check webstorm
         try {
+          log(`Check if webstorm is installed`)
           child.execSync(`webstorm --version`)
+          log(`WebStorm is installed`)
         } catch (error) {
           res.webstorm = false;
-          console.error(error);
+          log(chalk.redBright(`WebStorm is not installed`))
         }
-        console.log(JSON.stringify(res));
 
+        // scan projects list
+        try {
+          const paths = DEFAULT_PATHS.map(p => `/Users/${p}`)
+          log(`Scaning projects list in paths:\n ${chalk.yellow(JSON.stringify(paths, null, 2))}`)
+          res.projects = paths
+            .reduce((acc, curr) => [...acc, ...fs.readdirSync(curr)], [])
+            .filter(t => !t.startsWith('.') )
+            // && fs.statSync(t).isDirectory()
+          log(`Scan out these projects`)
+        } catch (error) {
+          return response.end(`服务出错，请检查服务: ${error.message}`)
+        }
+       
+        console.log(`%c${JSON.stringify(res, null, 2)}`, 'color: red');
+
+        response.statusCode = 200;
         return response.end(JSON.stringify(res))
-      } else if (path === '/open') {
+      } 
+      
+      /**
+       * 打开项目
+       */
+      if (path === '/open') {
         if (!query.project) {
-          response.statusCode = 500;
           return response.end('缺少project参数')
         }
         if (!query.tool) {
-          response.statusCode = 500;
           return response.end('缺少tool参数')
         }
   
         try {
           child.execSync(`${query.tool} ~/workspace/${query.project}`)
         } catch (error) {
-          response.statusCode = 500;
           const err = [
             `项目打开失败:`,
             error.message,
@@ -59,6 +88,8 @@ http.createServer((request, response) => {
           ]
           return response.end(err.join('\n'))
         }
+
+        response.statusCode = 200;
         return response.end('项目已经打开')
       }
 

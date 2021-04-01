@@ -1,0 +1,23 @@
+{
+  "name": "open-dir",
+  "version": "0.0.1",
+  "description": "auto open dir",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/luoxifeng/open-dir.git"
+  },
+  "author": "luoxifeng",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/luoxifeng/open-dir/issues"
+  },
+  "homepage": "https://github.com/luoxifeng/open-dir#readme",
+  "dependencies": {
+    "chalk": "^4.1.0"
+  }
+}
