@@ -98,16 +98,14 @@
         padding: 5px 10px;
         border: 1px solid #000;
         border-radius: 10px;
-        margin: 5px;
+        margin: 5px 8px;
         color: #fff;
-      }
-
-      .project-tag:hover {
-        box-shadow: 0 0 10px ;
+        transition: all .3s ease-in-out;
       }
 
       .project-tag.shadow {
-        box-shadow: 0 0 10px ;
+        transform: scale(1.15);
+        /* box-shadow: 0 0 10px ; */
       }
 
       .project-tag.disabled {
@@ -176,7 +174,7 @@
       }
 
       .scale {
-        animation: scale 1.5s linear infinite;
+        animation: scale 1s linear infinite;
       }
 
       @keyframes scale {
