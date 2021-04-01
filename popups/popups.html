@@ -244,8 +244,9 @@
                     disabled: dragRole === 'project' && dragName !== t,
                     shadow: dragRole !== 'project' && dropName === t,
                   }"
+                  :title="`访问次数：${t.count}`"
                 >
-                  {{t}}
+                  {{t.name}}
                 </div>
               </div>
             </div>

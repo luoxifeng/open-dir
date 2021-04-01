@@ -70,6 +70,12 @@ http.createServer((request, response) => {
               ]
             }, [])
             .sort((a, b) => -(store[a] || 0) - (store[b] || 0))
+            .map(name => {
+              return {
+                name,
+                count: store[name] || 0
+              }
+            })
           log(`Scan out these projects:\n${chalk.yellow(JSON.stringify(res.projects, null, 2))}`)
         } catch (error) {
           log(`Scan projects error:\n${chalk.red(error.message)}`)
