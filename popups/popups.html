@@ -234,19 +234,19 @@
                   :key='i'
                   class="project-tag"
                   data-role="project"
-                  :data-name="t"
+                  :data-name="t.name"
                   draggable
                   @dragstart="dragstart"
                   @dragend="dragend"
                   @dragover="dragover"
                   @drop='drop'
                   :class="{
-                    disabled: dragRole === 'project' && dragName !== t,
-                    shadow: dragRole !== 'project' && dropName === t,
+                    disabled: dragRole === 'project' && dragName !== t.name,
+                    shadow: dragRole !== 'project' && dropName === t.name,
                   }"
                   :title="`访问次数：${t.count}`"
                 >
-                  {{t.name}}
+                  {{t.name}}|{{t.hot}}
                 </div>
               </div>
             </div>
@@ -267,16 +267,16 @@
                 </td>
                 <td>
                   <div class="oper-group">
-                    <a @click="open(t, 'open')" title="打开文件夹">
+                    <a @click="open(t.name, 'open')" title="打开文件夹">
                       <img src='../icons/folder.png' class="tool-icon">
                     </a>
-                    <a v-if="code" @click="open(t, 'code')" title="使用vscode打开" >
+                    <a v-if="code" @click="open(t.name, 'code')" title="使用vscode打开" >
                       <img src='../icons/vscode.png' class="tool-icon">
                     </a>
-                    <a v-if="!webstorm" @click="open(t, 'webstorm')" title="使用webstorm打开">
+                    <a v-if="!webstorm" @click="open(t.name, 'webstorm')" title="使用webstorm打开">
                       <img src='../icons/webstorm.png' class="tool-icon">
                     </a>
-                    <a v-if="!sublime" @click="open(t, 'sublime')" title="使用sublime打开">
+                    <a v-if="!sublime" @click="open(t.name, 'sublime')" title="使用sublime打开">
                       <img src='../icons/sublime.png' class="tool-icon" >
                     </a>
                   </div>

@@ -13,10 +13,21 @@ const readStore = () => {
   } catch (error) {}
   return store;
 }
-const getCountLevel = (counts) => {
+const createHotLevel = (counts = [0]) => {
+  if (!counts.length) counts = [0];
+  const min = Math.min(...counts);
+  const avg = counts.reduce((a, b) => a + b) / counts.length;
+  const max = Math.max(...counts);
+  const half0 = (min + avg) / 2;
+  const half1 = (max + avg) / 2;
   
+  return (count = 0) => {
+    if (count > min - 1 && count <= half0) return 'freez';
+    if (count > half0 && count <= avg) return 'cold';
+    if (count > avg && count <= half1) return 'warm';
+    if (count > half1 && count <= max) return 'hot';
+  }
 }
-
 
 http.createServer((request, response) => {
     const [path, queryStr = ''] = request.url.split('?');
@@ -60,8 +71,10 @@ http.createServer((request, response) => {
           log(chalk.redBright(`WebStorm is not installed`))
         }
 
-        // scan projects list
+        // scan projects list and map data
         try {
+          const counts = [];
+          let getHotLevel = () => 'freez';
           const paths = DEFAULT_PATHS.map(p => `/Users/${p}`)
           log(`Scaning projects list in paths:\n${chalk.yellow(JSON.stringify(paths, null, 2))}`)
           res.projects = paths
@@ -72,13 +85,23 @@ http.createServer((request, response) => {
                   .filter(t => !t.startsWith('.') && fs.statSync(`${curr}/${t}`).isDirectory())
               ]
             }, [])
-            .sort((a, b) => -(store[a] || 0) - (store[b] || 0))
             .map(name => {
+              const count = store[name] || 0;
+              counts.push(count)
               return {
                 name,
-                count: store[name] || 0
+                count,
               }
             })
+            .map((t, i) => {
+              if (!i) getHotLevel = createHotLevel(counts);
+              return {
+                ...t,
+                hot: getHotLevel(t.count)
+              }
+            })
+            .sort((a, b) => -(a.count - b.count))
+
           log(`Scan out these projects:\n${chalk.yellow(JSON.stringify(res.projects, null, 2))}`)
         } catch (error) {
           log(`Scan projects error:\n${chalk.red(error.message)}`)
