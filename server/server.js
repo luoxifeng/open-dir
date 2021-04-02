@@ -3,25 +3,8 @@ const fs = require('fs');
 const http = require('http');
 const qs = require('querystring');
 const chalk = require('chalk');
-const config = require('./config');
-
-console.log(config.storeFile, '====')
-
-const readStore = () => {
-  let store = {};
-  try {
-    store = JSON.parse(fs.readFileSync(config.storeFile).toString())
-  } catch (error) {}
-  return store;
-}
-
-const writeStore = store => {
-  try {
-    fs.writeFileSync(config.storeFile, JSON.stringify(store, null, 2))
-  } catch (error) {
-    console.log(chalk.redBright(error.message))
-  }
-}
+const config = require('../config');
+const utils = require('./utils');
 
 const createHotLevel = (counts = [0]) => {
   if (!counts.length) counts = [0];
@@ -42,7 +25,7 @@ const createHotLevel = (counts = [0]) => {
 http.createServer((request, response) => {
     const [path, queryStr = ''] = request.url.split('?');
     const query = qs.parse(queryStr);
-    const store = readStore();
+    const store = utils.readStore();
     response.setHeader('Access-Control-Allow-Origin', '*');
     response.setHeader('Content-Type', 'application/json;charset=UTF-8');
     response.statusCode = 500;
@@ -85,7 +68,7 @@ http.createServer((request, response) => {
         try {
           const counts = [];
           let getHotLevel = () => 'freez';
-          const paths = config.paths.map(p => `/Users/${p}`)
+          const paths = config.paths;
           log(`Scaning projects list in paths:\n${chalk.yellow(JSON.stringify(paths, null, 2))}`)
           res.projects = paths
             .reduce((acc, curr) => {
@@ -138,7 +121,7 @@ http.createServer((request, response) => {
          * update store
          */
         store[path] = (store[path] || 0) + 1;
-        writeStore(store)
+        utils.writeStore(store)
   
         try {
           child.execSync(`${tool} ${query.path}`)
