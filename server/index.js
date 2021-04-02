@@ -51,7 +51,7 @@ http.createServer((request, response) => {
         // scan projects list and map data
         try {
           const counts = [];
-          let getHotLevel = () => 'freez';
+          let getHotLevel = () => 'freeze';
           const paths = config.paths;
           log(`Scaning projects list in paths:\n${chalk.yellow(JSON.stringify(paths, null, 2))}`)
           res.projects = paths
@@ -66,6 +66,7 @@ http.createServer((request, response) => {
                     counts.push(count)
                     return {
                       name,
+                      showOpenCount: config.showOpenCount,
                       count,
                       path,
                       show: true,

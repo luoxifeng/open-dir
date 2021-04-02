@@ -31,7 +31,7 @@ _.createHotLevel = (counts = [0]) => {
   const half1 = (max + avg) / 2;
   
   return (count = 0) => {
-    if (count > min - 1 && count <= half0) return 'freez';
+    if (count > min - 1 && count <= half0) return 'freeze';
     if (count > half0 && count <= avg) return 'cold';
     if (count > avg && count <= half1) return 'warm';
     if (count > half1 && count <= max) return 'hot';

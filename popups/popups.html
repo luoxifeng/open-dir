@@ -173,13 +173,13 @@
         box-shadow: 0 0 10px #1890ff;
       }
 
-      .project-tag.freez {
+      .project-tag.freeze {
         background-color: #888888;
         border-color: #888888;
         box-shadow: 0 1px 5px #888888;
       }
 
-      .project-tag.freez:hover {
+      .project-tag.freeze:hover {
         box-shadow: 0 0 10px #888888;
       }
 
@@ -335,6 +335,8 @@
                     class="project-tag animate__animated"
                     data-role="project"
                     :data-value="t.path"
+                    :data-hot="t.hot"
+                    :data-count="t.count"
                     draggable
                     @dragstart="dragstart"
                     @dragend="dragend"
@@ -352,7 +354,7 @@
                     ]"
                     :title="`访问次数：${t.count}`"
                   >
-                    {{t.name}}
+                    {{t.name}}{{t.showOpenCount ? ` | ${t.count}` : ''}}
                   </div>
                 </template>
               </div>
