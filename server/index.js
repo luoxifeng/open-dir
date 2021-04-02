@@ -69,6 +69,7 @@ http.createServer((request, response) => {
                       count,
                       path,
                       show: true,
+                      matched: false, // 搜索匹配到
                     }
                   })
               ]

@@ -37,7 +37,10 @@ getCurrentTabId(id => {
       target(val) {
         if (this.fetching) return;
         const trimed = (val || '').trim();
-        this.projects.forEach(t => (t.show = t.name.includes(trimed)))
+        this.projects.forEach(t => {
+          t.show = t.name.includes(trimed);
+          t.matched = trimed && t.show
+        })
       }
     },
     methods: {

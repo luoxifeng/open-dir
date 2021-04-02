@@ -7,6 +7,7 @@
       content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"
     />
     <title></title>
+    <link rel="stylesheet" href="./animate.css" />
     <style>
       .app {
         width: 500px;
@@ -128,6 +129,10 @@
         transition: all .3s ease-in-out;
       }
 
+      .project-tag.matched {
+        /* animation: rotate .3s ease-in; */
+      }
+
       .project-tag.shadow {
         transform: scale(1.15);
         /* box-shadow: 0 0 10px ; */
@@ -216,6 +221,18 @@
         }
         100% { 
           transform: scale(1);
+        }
+      }
+
+      @keyframes rotate {
+        0% { 
+          transform: rotateZ(0deg);
+        }
+        50% { 
+          transform: rotateZ(180deg);
+        }
+        100% { 
+          transform: rotateZ(360deg);
         }
       }
 
@@ -329,8 +346,10 @@
                       {
                         disabled: dragRole === 'project' && dragValue !== t.path,
                         shadow: dragRole !== 'project' && dropValue === t.path,
+                        'animate__fadeInLeft': t.matched
                       },
-                      t.hot
+                      t.hot,
+                      'animate__animated animate__fadeInDown',
                     ]"
                     :title="`访问次数：${t.count}`"
                   >
