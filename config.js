@@ -16,4 +16,5 @@ module.exports = {
   appearAnimate: 'fadeInUp', // 默认出现动画
   matchedAnimate: 'fadeInLeft', // 搜索匹配到，出现动画
   showOpenCount: true, // 显示拖拽模式下打开次数，table模式下默认显示
+  radiusStyle: true, // 拖拽模式下圆角风格
 }
