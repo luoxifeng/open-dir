@@ -70,6 +70,8 @@ http.createServer((request, response) => {
                       path,
                       show: true,
                       matched: false, // 搜索匹配到
+                      appearAnimate: config.appearAnimate,
+                      matchedAnimate: config.matchedAnimate,
                     }
                   })
               ]

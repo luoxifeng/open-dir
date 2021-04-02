@@ -346,10 +346,10 @@
                       {
                         disabled: dragRole === 'project' && dragValue !== t.path,
                         shadow: dragRole !== 'project' && dropValue === t.path,
-                        'animate__fadeInLeft': t.matched
                       },
                       t.hot,
-                      'animate__animated animate__fadeInDown',
+                      'animate__animated',
+                      t.matched ? t.matchedAnimate : t.appearAnimate,
                     ]"
                     :title="`访问次数：${t.count}`"
                   >

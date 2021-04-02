@@ -13,6 +13,6 @@ module.exports = {
   ],
   storeFile: path.resolve(__dirname, './store.json'),
   serverPort: 21319,
-  appearAnimate: '', // 默认出现动画
-  matchedAnimate: '', // 搜索匹配到，出现动画
+  appearAnimate: 'animate__fadeInUp', // 默认出现动画
+  matchedAnimate: 'animate__fadeInLeft', // 搜索匹配到，出现动画
 }
