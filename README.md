@@ -13,3 +13,7 @@ chrome extension: scan your workspace list all projects, when you click one， w
 - 0402
   - 新增搜索过滤
   - 配置剥离优化
+  - 新增初次出现动画 （可配置）
+  - 新增搜索匹配到动画 （可配置）
+  - 新增打开动画
+  - 动画使用animate.css提供支持

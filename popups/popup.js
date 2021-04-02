@@ -49,6 +49,7 @@ getCurrentTabId(id => {
     },
     methods: {
       refresh() {
+        this.draged = false;
         this.target = '';
         this.fetching = true;
         this.error = '';
@@ -99,14 +100,12 @@ getCurrentTabId(id => {
       },
       dragover(e) {
         e.preventDefault();
-
         if (isSameRole(e)) return;
         const { role, value } = getDragTarget(e).dataset;
         e.dataTransfer.dropEffect = "move";
         this.dropValue = value;
-        if (role === 'project') {
-          this.$set(this.find(value), 'dragHovered', true)
-        }
+        let current = this.find(role === 'project' ? value : e.dataTransfer.getData('dragValue'));
+        current.dragHovered = true;
       },
       dragend(e) {
         e.preventDefault();
@@ -122,15 +121,16 @@ getCurrentTabId(id => {
         const dragRole = e.dataTransfer.getData('dragRole');
         const dragValue = e.dataTransfer.getData('dragValue');
         const { value } = target.dataset;
+        let current = {};
         if (dragRole === 'tool') {
-          const current = this.find(value)
+          current = this.find(value)
           this.open(dragValue, value /* as project path */);
-          this.$set(current, 'opened', true)
-          setTimeout(() => current.opened = false, 1000)
         } else {
+          current = this.find(dragValue)
           this.open(value /* as tool name */, dragValue);
         }
-       
+        current.opened = true;
+        setTimeout(() => current.opened = false, 1000)
       },
       find(val) {
         return this.projects.find(t => t.path === val) || {};
