@@ -90,7 +90,8 @@ http.createServer((request, response) => {
                     return {
                       name,
                       count,
-                      path
+                      path,
+                      show: true,
                     }
                   })
               ]
@@ -164,20 +165,24 @@ http.createServer((request, response) => {
   })
 
 
-function curry(fn, ...list) {
-  const l = fn.length;
-  return (...args) => {
-    const k = [...list, ...args];
-    if (list.length >= l) return fn(...list)
-    curry(fn, ...args, ...list)
+
+  function curry(fn, ...list) {
+    if (list.length >= fn.length) return fn(...list)
+    return (...args) => curry(fn, ...list, ...args)
   }
-}
 
- function sum(a, b, c, d) {
-   return a + b + c + d;
- }
+  function curry(fn, ...list) {
+    const allArgs = [...list];
 
- curry(sum, 1,2,3, 4)
- curry(sum)(1,2)(3, 4, 5)
-
-
+    function curryed(...args) {
+      allArgs.push(...args)
+      return allArgs.length >= fn.length ? fn(...allArgs) : curryed
+    }
+    return curryed();
+  }
+  
+  function sum(a, b, c, d) {
+    return a + b + c + d;
+  }
+  curry(sum)(1)(2)(3, 4)
+  curry(sum)(1,2)(3, 4, 5)

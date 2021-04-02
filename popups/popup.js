@@ -19,21 +19,31 @@ getCurrentTabId(id => {
     data() {
       return {
         uiType: 'drag',
-        uiType: 'table',
+        // uiType: 'table',
         code: false,
         webstorm: false,
         sublime: false,
         error: '',
-        doing: false,
+        fetching: false,
         projects: [],
         dragRole: '',
         dragValue: '',
         dropValue: '',
+        showOptPanel: false,
+        target: ''
       };
+    },
+    watch: {
+      target(val) {
+        if (this.fetching) return;
+        const trimed = (val || '').trim();
+        this.projects.forEach(t => (t.show = t.name.includes(trimed)))
+      }
     },
     methods: {
       refresh() {
-        this.doing = true;
+        this.target = '';
+        this.fetching = true;
         this.error = '';
         this.projects = [];
         window.fetch('http://localhost:21319/refresh')
@@ -51,7 +61,7 @@ getCurrentTabId(id => {
             this.error = error
           })
           .finally(() => {
-            this.doing = false;
+            this.fetching = false;
           })
       },
       open(path, tool) {

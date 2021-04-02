@@ -18,6 +18,30 @@
         overflow-x: hidden;
       }
 
+      .search {
+        display: flex;
+        justify-content: center;
+      }
+
+      .search input {
+        padding: 5px 10px;
+        color: #313131;
+        font-size: 18px;
+        line-height: 20px;
+        width: 86%;
+        margin: 10px;
+        border-radius: 100px;
+        border: 1px solid #ccc;
+        box-shadow: 0 0 3px;
+        text-align: center;
+      }
+
+      .search input:focus {
+        outline: none;
+        border-color: #1890ff;
+        box-shadow: 0 0 3px #1890ff;
+      }
+
       ul {
         padding: 0 10px;
         margin: 0;
@@ -81,6 +105,7 @@
       }
 
       .project-block-tags {
+        width: 100%;
         height: 100%;
         overflow-y: scroll;
         overflow-x: hidden;
@@ -202,10 +227,19 @@
       <header>
         <span class='title'>RushGo</span>
         <a @click='refresh' style="float: right;">refresh</a>
+        <!-- <a @click='() => showOptPanel = !showOptPanel' style="float: right;margin-right: 15px;">options</a> -->
       </header>
       <hr>
+      <section class="options" v-if="showOptPanel">
+        <div>
+        </div>
+      </section>
+      <section class="search">
+        <input type="text" v-model="target" />
+      </section>
+      <hr>
       <section class="list">
-        <div v-if="doing">请求项目列表中，请稍等</div>
+        <div v-if="fetching">请求项目列表中，请稍等</div>
         <div v-else-if="error">{{error}}</div>
         <template v-else>
           <div v-if="!code && !webstorm ">在你的机器上未检查到可以打开项目的工具，请安装或者检查环境变量</div>
@@ -279,28 +313,30 @@
             </div>
             <div class='project-block-tags'>
               <div class='project-tags'>
-                <div
-                  v-for="(t, i) in projects"
-                  :key='i'
-                  class="project-tag"
-                  data-role="project"
-                  :data-value="t.path"
-                  draggable
-                  @dragstart="dragstart"
-                  @dragend="dragend"
-                  @dragover="dragover"
-                  @drop='drop'
-                  :class="[
-                    {
-                      disabled: dragRole === 'project' && dragValue !== t.path,
-                      shadow: dragRole !== 'project' && dropValue === t.path,
-                    },
-                    t.hot
-                  ]"
-                  :title="`访问次数：${t.count}`"
-                >
-                  {{t.name}}
-                </div>
+                <template v-for="(t, i) in projects">
+                  <div
+                    v-show="t.show"
+                    :key='t.path'
+                    class="project-tag"
+                    data-role="project"
+                    :data-value="t.path"
+                    draggable
+                    @dragstart="dragstart"
+                    @dragend="dragend"
+                    @dragover="dragover"
+                    @drop='drop'
+                    :class="[
+                      {
+                        disabled: dragRole === 'project' && dragValue !== t.path,
+                        shadow: dragRole !== 'project' && dropValue === t.path,
+                      },
+                      t.hot
+                    ]"
+                    :title="`访问次数：${t.count}`"
+                  >
+                    {{t.name}}
+                  </div>
+                </template>
               </div>
             </div>
           </div>
@@ -308,37 +344,42 @@
             <thead>
               <tr>
                 <th width="50%">项目</th>
+                <th width="10%">热度</th>
                 <th>操作</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(t, i) in projects" :key='i'>
-                <td>
-                  <span class="project-name">
-                    {{t.name}}
-                  </span>
-                </td>
-                <td>
-                  <div class="oper-group">
-                    <a @click="open(t.path, 'open')" title="打开文件夹">
-                      <img src='../icons/folder.png' class="tool-icon">
-                    </a>
-                    <a v-if="code" @click="open(t.path, 'code')" title="使用vscode打开" >
-                      <img src='../icons/vscode.png' class="tool-icon">
-                    </a>
-                    <a v-if="!webstorm" @click="open(t.path, 'webstorm')" title="使用webstorm打开">
-                      <img src='../icons/webstorm.png' class="tool-icon">
-                    </a>
-                    <a v-if="!sublime" @click="open(t.path, 'sublime')" title="使用sublime打开">
-                      <img src='../icons/sublime.png' class="tool-icon" >
-                    </a>
-                  </div>
-                </td>
-              </tr>
+              <template v-for="(t, i) in projects">
+                <tr v-show="t.show" :key='t.path'>
+                  <td>
+                    <span class="project-name">
+                      {{t.name}}
+                    </span>
+                  </td>
+                  <td>
+                    {{t.count}}
+                  </td>
+                  <td>
+                    <div class="oper-group">
+                      <a @click="open(t.path, 'open')" title="打开文件夹">
+                        <img src='../icons/folder.png' class="tool-icon">
+                      </a>
+                      <a v-if="code" @click="open(t.path, 'code')" title="使用vscode打开" >
+                        <img src='../icons/vscode.png' class="tool-icon">
+                      </a>
+                      <a v-if="webstorm" @click="open(t.path, 'webstorm')" title="使用webstorm打开">
+                        <img src='../icons/webstorm.png' class="tool-icon">
+                      </a>
+                      <a v-if="sublime" @click="open(t.path, 'sublime')" title="使用sublime打开">
+                        <img src='../icons/sublime.png' class="tool-icon" >
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+              </template>
             </tbody>
           </table>
         </template>
-      
       </section>
     </section>
     <script src="../js/vue.min.js"></script>
