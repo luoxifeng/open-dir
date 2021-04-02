@@ -19,7 +19,7 @@ getCurrentTabId(id => {
     data() {
       return {
         uiType: 'drag',
-        // uiType: 'table',
+        uiType: 'table',
         code: false,
         webstorm: false,
         sublime: false,

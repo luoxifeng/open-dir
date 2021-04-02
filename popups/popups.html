@@ -166,11 +166,16 @@
       .tool-icon {
         height: 20px;
         width: 20px;
+        transition: all .3s ease-in-out;
       }
 
       .tool-icon img {
         height: 100%;
         width: 100%;
+      }
+
+      .projects-table .tool-icon:hover {
+        transform: scale(1.2);
       }
 
       .scale {
@@ -188,6 +193,8 @@
           transform: scale(1);
         }
       }
+
+      
     </style>
   </head>
   <body>
@@ -237,6 +244,7 @@
                 <img src='../icons/vscode.png' class="tool-icon">
               </a>
               <a
+                v-if="webstorm"
                 data-role="tool"
                 data-value="webstorm"
                 draggable
@@ -252,6 +260,7 @@
                 <img src='../icons/webstorm.png' class="tool-icon">
               </a>
               <a
+                v-if="sublime"
                 data-role="tool"
                 data-value="sublime"
                 draggable
@@ -295,7 +304,7 @@
               </div>
             </div>
           </div>
-          <table v-else border='1' cellspacing='0'>
+          <table v-else border='1' cellspacing='0' class="projects-table">
             <thead>
               <tr>
                 <th width="50%">项目</th>
@@ -306,7 +315,7 @@
               <tr v-for="(t, i) in projects" :key='i'>
                 <td>
                   <span class="project-name">
-                    {{t}}
+                    {{t.name}}
                   </span>
                 </td>
                 <td>
