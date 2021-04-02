@@ -3,16 +3,26 @@ const fs = require('fs');
 const http = require('http');
 const qs = require('querystring');
 const chalk = require('chalk');
+const config = require('./config');
 
-const DEFAULT_PATHS = ['chongyang/workspace', 'chongyang/github']
-const FILE_NAME = './store.json'
+console.log(config.storeFile, '====')
+
 const readStore = () => {
   let store = {};
   try {
-    store = JSON.parse(fs.readFileSync(FILE_NAME).toString())
+    store = JSON.parse(fs.readFileSync(config.storeFile).toString())
   } catch (error) {}
   return store;
 }
+
+const writeStore = store => {
+  try {
+    fs.writeFileSync(config.storeFile, JSON.stringify(store, null, 2))
+  } catch (error) {
+    console.log(chalk.redBright(error.message))
+  }
+}
+
 const createHotLevel = (counts = [0]) => {
   if (!counts.length) counts = [0];
   const min = Math.min(...counts);
@@ -75,7 +85,7 @@ http.createServer((request, response) => {
         try {
           const counts = [];
           let getHotLevel = () => 'freez';
-          const paths = DEFAULT_PATHS.map(p => `/Users/${p}`)
+          const paths = config.paths.map(p => `/Users/${p}`)
           log(`Scaning projects list in paths:\n${chalk.yellow(JSON.stringify(paths, null, 2))}`)
           res.projects = paths
             .reduce((acc, curr) => {
@@ -127,14 +137,8 @@ http.createServer((request, response) => {
         /**
          * update store
          */
-        
         store[path] = (store[path] || 0) + 1;
-        try {
-          fs.writeFileSync(FILE_NAME, JSON.stringify(store, null, 2))
-        } catch (error) {
-
-        }
-       
+        writeStore(store)
   
         try {
           child.execSync(`${tool} ${query.path}`)
