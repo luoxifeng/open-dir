@@ -30,16 +30,20 @@ getCurrentTabId(id => {
         dragValue: '',
         dropValue: '',
         showOptPanel: false,
-        target: ''
+        target: '',
+        draged: false, // 曾经拖拽过
       };
     },
     watch: {
       target(val) {
         if (this.fetching) return;
         const trimed = (val || '').trim();
+        this.draged = false;
         this.projects.forEach(t => {
           t.show = t.name.includes(trimed);
           t.matched = trimed && t.show
+          t.dragHovered = false; // 是不是曾被drag hover 搜索的时候重置
+          t.opened = false; // 是不是曾被打开过
         })
       }
     },
@@ -67,7 +71,7 @@ getCurrentTabId(id => {
             this.fetching = false;
           })
       },
-      open(path, tool) {
+      open(tool, path) {
         console.log(`%copen: %cpath=${path} tool=${tool}`,  'background: #222; color: #bada55', 'color: blue');
         this.error = '';
         window.fetch(`http://localhost:21319/open?path=${path}&tool=${tool}`)
@@ -87,6 +91,7 @@ getCurrentTabId(id => {
 
         this.dragRole = target.dataset.role;
         this.dragValue = target.dataset.value;
+        this.draged = true
 
         e.dataTransfer.dropEffect = "move";
         e.dataTransfer.setData("dragRole", this.dragRole);
@@ -96,16 +101,17 @@ getCurrentTabId(id => {
         e.preventDefault();
 
         if (isSameRole(e)) return;
-        const dataset = getDragTarget(e).dataset;
+        const { role, value } = getDragTarget(e).dataset;
         e.dataTransfer.dropEffect = "move";
-        this.dropValue = dataset.value;
-        console.log('dragover', this.dropRole, this.dropValue)
+        this.dropValue = value;
+        if (role === 'project') {
+          this.$set(this.find(value), 'dragHovered', true)
+        }
       },
       dragend(e) {
         e.preventDefault();
         this.dragRole = '';
         this.dragValue = '';
-        this.dropRole = '';
         this.dropValue = '';
       },
       drop(e) {
@@ -115,11 +121,19 @@ getCurrentTabId(id => {
 
         const dragRole = e.dataTransfer.getData('dragRole');
         const dragValue = e.dataTransfer.getData('dragValue');
+        const { value } = target.dataset;
         if (dragRole === 'tool') {
-          this.open(target.dataset.value, dragValue);
+          const current = this.find(value)
+          this.open(dragValue, value /* as project path */);
+          this.$set(current, 'opened', true)
+          setTimeout(() => current.opened = false, 1000)
         } else {
-          this.open(dragValue, target.dataset.value);
+          this.open(value /* as tool name */, dragValue);
         }
+       
+      },
+      find(val) {
+        return this.projects.find(t => t.path === val) || {};
       }
     },
     created() {
