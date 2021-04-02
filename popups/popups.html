@@ -126,17 +126,12 @@
         border-radius: 10px;
         margin: 5px 8px;
         color: #fff;
-        transition: all .3s linear;
+        transition: all .2s linear;
       }
-
      
       .project-tag.draged {
         animation-name: none !important;
       }
-
-      /* .project-tag.draged:hover {
-        animation-name: shakeX;
-      } */
 
       .project-tag.draged:hover {
         transform: scale(1.15);
@@ -158,7 +153,8 @@
         box-shadow: 0 1px 5px #f22d2f;
       }
 
-      .project-tag.hot:hover {
+      .project-tag.hot:hover, 
+      .project-tag.hot.hovering {
         box-shadow: 0 0 10px #f22d2f;
       }
 
@@ -168,7 +164,8 @@
         box-shadow: 0 1px 5px #FF8C00;
       }
 
-      .project-tag.warm:hover {
+      .project-tag.warm:hover,
+      .project-tag.warm.hovering {
         box-shadow: 0 0 10px #FF8C00;
       }
 
@@ -178,7 +175,8 @@
         box-shadow: 0 1px 5px #1890ff;
       }
 
-      .project-tag.cold:hover {
+      .project-tag.cold:hover,
+      .project-tag.cold.hovering {
         box-shadow: 0 0 10px #1890ff;
       }
 
@@ -188,10 +186,10 @@
         box-shadow: 0 1px 5px #888888;
       }
 
-      .project-tag.freeze:hover {
+      .project-tag.freeze:hover,
+      .project-tag.freeze.hovering {
         box-shadow: 0 0 10px #888888;
       }
-
 
       .project-name {
         font-size: 18px;
