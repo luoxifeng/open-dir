@@ -129,8 +129,17 @@
         transition: all .3s linear;
       }
 
+     
       .project-tag.draged {
         animation-name: none !important;
+      }
+
+      /* .project-tag.draged:hover {
+        animation-name: shakeX;
+      } */
+
+      .project-tag.draged:hover {
+        transform: scale(1.15);
       }
 
       .project-tag.hovering {
@@ -259,7 +268,7 @@
         <template v-else>
           <div v-if="!code && !webstorm ">在你的机器上未检查到可以打开项目的工具，请安装或者检查环境变量</div>
           <div v-if="projects.length === 0">项目列表为空，请刷新或者检查工作空间</div>
-          <div v-else-if="uiType === 'drag'" class="project-block">
+          <div v-else-if="uiType === 'drag'" class="project-block" @mouseenter='draged = true'>
             <div class="project-block-tools">
               <a
                 data-role="tool"
@@ -332,7 +341,7 @@
                   <div
                     v-show="t.show"
                     :key='t.path'
-                    class="project-tag animate__animated"
+                    class="project-tag "
                     data-role="project"
                     :data-value="t.path"
                     :data-hot="t.hot"
@@ -347,10 +356,10 @@
                         draged: !t.opened && draged,
                         disabled: dragRole === 'project' && dragValue !== t.path,
                         hovering: dragRole !== 'project' && dropValue === t.path,
-                        'animate__bounceOut': t.opened
+                        'animate__animated animate__bounceOut': t.opened
                       },
                       t.hot,
-                      t.dragHovered ? '' : `animate__${t.matched ? t.matchedAnimate : t.appearAnimate}`,
+                      t.dragHovered ? '' : `animate__animated animate__${t.matched ? t.matchedAnimate : t.appearAnimate}`,
                     ]"
                     :title="`访问次数：${t.count}`"
                   >

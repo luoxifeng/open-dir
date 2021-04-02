@@ -5,6 +5,14 @@ function getCurrentTabId(callback) {
   });
 }
 
+const debounce = (fun, time) => {
+  let timer = 0;
+  return () => {
+    clearTimeout(fun);
+    timer = setTimeout(fun, time);
+  }
+}
+
 getCurrentTabId(id => {
   // const bg = chrome.extension.getBackgroundPage();
   const getDragTarget = e => {
@@ -31,7 +39,7 @@ getCurrentTabId(id => {
         dropValue: '',
         showOptPanel: false,
         target: '',
-        draged: false, // 曾经拖拽过
+        draged: true, // 曾经拖拽过
       };
     },
     watch: {
@@ -140,7 +148,6 @@ getCurrentTabId(id => {
       this.refresh();
     },
     mounted() {
-
     }
   })
 })
