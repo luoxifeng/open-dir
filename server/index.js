@@ -6,22 +6,6 @@ const chalk = require('chalk');
 const config = require('../config');
 const utils = require('./utils');
 
-const createHotLevel = (counts = [0]) => {
-  if (!counts.length) counts = [0];
-  const min = Math.min(...counts);
-  const avg = counts.reduce((a, b) => a + b) / counts.length;
-  const max = Math.max(...counts);
-  const half0 = (min + avg) / 2;
-  const half1 = (max + avg) / 2;
-  
-  return (count = 0) => {
-    if (count > min - 1 && count <= half0) return 'freez';
-    if (count > half0 && count <= avg) return 'cold';
-    if (count > avg && count <= half1) return 'warm';
-    if (count > half1 && count <= max) return 'hot';
-  }
-}
-
 http.createServer((request, response) => {
     const [path, queryStr = ''] = request.url.split('?');
     const query = qs.parse(queryStr);
@@ -29,7 +13,7 @@ http.createServer((request, response) => {
     response.setHeader('Access-Control-Allow-Origin', '*');
     response.setHeader('Content-Type', 'application/json;charset=UTF-8');
     response.statusCode = 500;
-    
+
     try {
       /**
        * 刷新项目列表
@@ -90,7 +74,7 @@ http.createServer((request, response) => {
               ]
             }, [])
             .map((t, i) => {
-              if (!i) getHotLevel = createHotLevel(counts);
+              if (!i) getHotLevel = utils.createHotLevel(counts);
               return {
                 ...t,
                 hot: getHotLevel(t.count)
@@ -147,8 +131,8 @@ http.createServer((request, response) => {
       `)
     }
 })
-  .listen(21319, () => {
-    console.log('服务已启动');
+  .listen(config.serverPort, () => {
+    console.log(chalk.greenBright(`Server start on port ${config.serverPort}`));
   })
 
 

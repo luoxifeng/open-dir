@@ -6,4 +6,5 @@ module.exports = {
     '/Users/chongyang/github'
   ],
   storeFile: path.resolve(__dirname, './store.json'),
+  serverPort: 21319,
 }
