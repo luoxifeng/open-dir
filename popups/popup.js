@@ -40,6 +40,7 @@ getCurrentTabId(id => {
         showOptPanel: false,
         target: '',
         draged: true, // 曾经拖拽过
+        radiusStyle: true,
       };
     },
     watch: {

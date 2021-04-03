@@ -25,6 +25,7 @@ http.createServer((request, response) => {
         const res = {
           code: true,
           webstorm: true,
+          radiusStyle: config.radiusStyle,
           projects: [],
         };
 
