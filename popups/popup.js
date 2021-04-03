@@ -8,7 +8,7 @@ function getCurrentTabId(callback) {
 const debounce = (fun, time) => {
   let timer = 0;
   return () => {
-    clearTimeout(fun);
+    clearTimeout(timer);
     timer = setTimeout(fun, time);
   }
 }
@@ -27,7 +27,7 @@ getCurrentTabId(id => {
     data() {
       return {
         uiType: 'drag',
-        // uiType: 'table',
+        uiType: 'table',
         code: false,
         webstorm: false,
         sublime: false,
