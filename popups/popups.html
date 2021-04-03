@@ -155,16 +155,16 @@
                   </td>
                   <td>
                     <div class="oper-group">
-                      <a @click="open(t.path, 'open')" title="打开文件夹">
+                      <a @click="open('open', t.path)" title="打开文件夹">
                         <img src='../icons/folder.png' class="tool-icon">
                       </a>
-                      <a v-if="code" @click="open(t.path, 'code')" title="使用vscode打开" >
+                      <a v-if="code" @click="open('code', t.path)" title="使用vscode打开" >
                         <img src='../icons/vscode.png' class="tool-icon">
                       </a>
-                      <a v-if="webstorm" @click="open(t.path, 'webstorm')" title="使用webstorm打开">
+                      <a v-if="webstorm" @click="open('webstorm', t.path)" title="使用webstorm打开">
                         <img src='../icons/webstorm.png' class="tool-icon">
                       </a>
-                      <a v-if="sublime" @click="open(t.path, 'sublime')" title="使用sublime打开">
+                      <a v-if="sublime" @click="open('sublime', t.path)" title="使用sublime打开">
                         <img src='../icons/sublime.png' class="tool-icon" >
                       </a>
                     </div>
