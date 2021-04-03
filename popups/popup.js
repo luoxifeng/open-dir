@@ -27,7 +27,6 @@ getCurrentTabId(id => {
     data() {
       return {
         uiType: 'drag',
-        uiType: 'table',
         code: false,
         webstorm: false,
         sublime: false,

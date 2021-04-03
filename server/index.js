@@ -23,9 +23,10 @@ http.createServer((request, response) => {
         
         log();
         const res = {
+          uiType: config.uiType,
+          radiusStyle: config.radiusStyle,
           code: true,
           webstorm: true,
-          radiusStyle: config.radiusStyle,
           projects: [],
         };
 
