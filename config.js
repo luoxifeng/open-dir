@@ -7,7 +7,7 @@ const path = require('path');
  */
 
 module.exports = {
-  uiType: 'drag',
+  uiType: 'block', // block table drag
   paths: [
     '/Users/chongyang/workspace',
     '/Users/chongyang/github'
