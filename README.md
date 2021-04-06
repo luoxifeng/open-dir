@@ -21,3 +21,5 @@ chrome extension: scan your workspace list all projects, when you click one， w
 - 0403
   - 新增ui风格配置
   - 新增拖拽模式下圆角配置
+- 0406
+  - 新增点击项目使用指定工具打开项目 (可配置)

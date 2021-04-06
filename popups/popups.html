@@ -43,6 +43,7 @@
                   :data-value="t.path"
                   :data-hot="t.hot"
                   :data-count="t.count"
+                  @click="open(t.clickUseTool, t.path)"
                   :class="[
                     {
                       'animate__animated animate__bounceOut': t.opened
@@ -140,6 +141,7 @@
                     @dragend="dragend"
                     @dragover="dragover"
                     @drop='drop'
+                    @click="open(t.clickUseTool, t.path)"
                     :class="[
                       {
                         radius: radiusStyle,
@@ -171,7 +173,7 @@
               <template v-for="(t, i) in projects">
                 <tr v-show="t.show" :key='t.path'>
                   <td>
-                    <span class="project-name">
+                    <span class="project-name" @click="open(t.clickUseTool, t.path)">
                       {{t.name}}
                     </span>
                   </td>

@@ -76,7 +76,8 @@ http.createServer((request, response) => {
                       appearAnimate: config.appearAnimate,
                       matchedAnimate: config.matchedAnimate,
                       dragHovered: false, // 曾被拖拽到另一方上面hover过，或者另一个拖到当前这个上方hover过
-                      opened: false, // 曾被打开过
+                      opened: false, // 曾被打开过，
+                      clickUseTool: config.clickUseTool,
                     }
                   })
               ]

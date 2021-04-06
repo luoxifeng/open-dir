@@ -7,11 +7,12 @@ const path = require('path');
  */
 
 module.exports = {
-  uiType: 'drag', // block table drag
+  uiType: 'block', // block table drag
   paths: [
     '/Users/chongyang/workspace',
     '/Users/chongyang/github'
   ],
+  clickUseTool: 'code', // 点击使用的工具
   storeFile: path.resolve(__dirname, './store.json'),
   serverPort: 21319,
   appearAnimate: 'fadeInUp', // 默认出现动画
