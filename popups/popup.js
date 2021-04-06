@@ -21,6 +21,10 @@ getCurrentTabId(id => {
     return target;
   };
   const isSameRole = e => getDragTarget(e).dataset.role === e.dataTransfer.getData('dragRole')
+  const openAndRecover = current => {
+    current.opened = true;
+    setTimeout(() => current.opened = false, 1000)
+  } 
   
   const app = new Vue({
     el: '#app',
@@ -94,6 +98,12 @@ getCurrentTabId(id => {
             alert(`请检查服务: ${error}`);
           })
       },
+      clickOpen(project) {
+        this.draged = true;
+        project.dragHovered = true;
+        openAndRecover(project)
+        this.open(project.clickUseTool, project.path)
+      },
       dragstart(e) {
         let target = getDragTarget(e);
         console.log('dragstart', target.dataset, target.dataset.value)
@@ -137,8 +147,7 @@ getCurrentTabId(id => {
           current = this.find(dragValue)
           this.open(value /* as tool name */, dragValue);
         }
-        current.opened = true;
-        setTimeout(() => current.opened = false, 1000)
+        openAndRecover(current);
       },
       find(val) {
         return this.projects.find(t => t.path === val) || {};

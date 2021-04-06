@@ -32,7 +32,7 @@
         <template v-else>
           <div v-if="!code && !webstorm ">在你的机器上未检查到可以打开项目的工具，请安装或者检查环境变量</div>
           <div v-if="projects.length === 0">项目列表为空，请刷新或者检查工作空间</div>
-          <div v-else-if="uiType === 'block'" class="project-block">
+          <div v-else-if="uiType === 'block'" class="project-block" @mouseenter='draged = true'>
             <div class='project-tags'>
               <template v-for="(t, i) in projects">
                 <div
@@ -43,13 +43,14 @@
                   :data-value="t.path"
                   :data-hot="t.hot"
                   :data-count="t.count"
-                  @click="open(t.clickUseTool, t.path)"
+                  @click="clickOpen(t)"
                   :class="[
                     {
+                      draged: !t.opened && draged,
                       'animate__animated animate__bounceOut': t.opened
                     },
                     t.hot,
-                    `animate__animated animate__${t.matched ? t.matchedAnimate : t.appearAnimate}`,
+                    t.dragHovered ? '' : `animate__animated animate__${t.matched ? t.matchedAnimate : t.appearAnimate}`,
                   ]"
                   :title="`访问次数：${t.count}`"
                 >
@@ -141,7 +142,7 @@
                     @dragend="dragend"
                     @dragover="dragover"
                     @drop='drop'
-                    @click="open(t.clickUseTool, t.path)"
+                    @click="clickOpen(t)"
                     :class="[
                       {
                         radius: radiusStyle,
