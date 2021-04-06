@@ -99,7 +99,7 @@ getCurrentTabId(id => {
           })
       },
       clickOpen(project) {
-        this.draged = true;
+        // this.draged = true;
         project.dragHovered = true;
         openAndRecover(project)
         this.open(project.clickUseTool, project.path)
