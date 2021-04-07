@@ -27,7 +27,16 @@
       </section>
       <hr>
       <section class="main">
-        <div v-if="fetching">请求项目列表中，请稍等</div>
+        <div v-if="fetching" class='loading-wrapper'>
+          <div class="loading">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <div>请求项目列表中，请稍等...</div>
+        </div>
         <div v-else-if="error">{{error}}</div>
         <template v-else>
           <div v-if="!code && !webstorm ">在你的机器上未检查到可以打开项目的工具，请安装或者检查环境变量</div>

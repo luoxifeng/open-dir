@@ -81,7 +81,7 @@ getCurrentTabId(id => {
             this.error = error
           })
           .finally(() => {
-            this.fetching = false;
+            this.fetching = !false;
           })
       },
       open(tool, path) {
