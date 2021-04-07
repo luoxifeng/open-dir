@@ -22,10 +22,15 @@
         <div>
         </div>
       </section>
-      <section class="search">
-        <input type="text" v-model="target" :class="{ radius: uiConfig.radiusStyle }"/>
+      <section v-if="uiConfig.search" class="search">
+        <input 
+          type="text"
+          v-model="target"
+          :class="{ radius: uiConfig.radiusStyle }"
+          placeholder="please enter the project name"
+        />
       </section>
-      <hr>
+      <hr v-if="uiConfig.search" />
       <section class="main">
         <div v-if="fetching" class='loading-wrapper'>
           <div class="loading" :class="{ rainbow: uiConfig.rainbowLoading }">

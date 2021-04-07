@@ -19,7 +19,12 @@ chrome extension: scan your workspace list all projects, when you click one， w
   - 动画使用animate.css提供支持
   - 新增拖拽模式下展示打开次数 （可配置）
 - 0403
-  - 新增ui风格配置 block模式
+  - 新增ui风格配置 tag模式
   - 新增拖拽模式下圆角配置
 - 0406
   - 新增点击项目使用指定工具打开项目 (可配置)
+- 0407
+  - 新增loading动效 支持彩虹loading (可配置)
+  - 新增loading延迟关闭 (可配置)
+  - 配置抽离到前台
+  - 新增搜索框显示隐藏配置项 (可配置)
