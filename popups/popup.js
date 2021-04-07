@@ -30,7 +30,7 @@ getCurrentTabId(id => {
     el: '#app',
     data() {
       return {
-        uiType: 'drag',
+        uiConfig: CONFIG,
         code: false,
         webstorm: false,
         sublime: false,
@@ -43,7 +43,6 @@ getCurrentTabId(id => {
         showOptPanel: false,
         target: '',
         draged: true, // 曾经拖拽过
-        radiusStyle: true,
       };
     },
     watch: {
@@ -71,7 +70,6 @@ getCurrentTabId(id => {
             if (res.status !== 200) {
               return res.text().then(Promise.reject.bind(Promise));
             }
-            
             return res.json()
           })
           .then(data => {
@@ -81,7 +79,9 @@ getCurrentTabId(id => {
             this.error = error
           })
           .finally(() => {
-            this.fetching = !false;
+            const close = () => this.fetching = false;
+            if (!this.uiConfig.delayLoadingClose) return close();
+            setTimeout(close, this.uiConfig.delayLoadingClose)
           })
       },
       open(tool, path) {
@@ -99,10 +99,9 @@ getCurrentTabId(id => {
           })
       },
       clickOpen(project) {
-        // this.draged = true;
         project.dragHovered = true;
         openAndRecover(project)
-        this.open(project.clickUseTool, project.path)
+        this.open(this.uiConfig.clickUseTool, project.path)
       },
       dragstart(e) {
         let target = getDragTarget(e);

@@ -23,12 +23,12 @@
         </div>
       </section>
       <section class="search">
-        <input type="text" v-model="target" :class="{ radius: radiusStyle }"/>
+        <input type="text" v-model="target" :class="{ radius: uiConfig.radiusStyle }"/>
       </section>
       <hr>
       <section class="main">
         <div v-if="fetching" class='loading-wrapper'>
-          <div class="loading">
+          <div class="loading" :class="{ rainbow: uiConfig.rainbowLoading }">
             <span></span>
             <span></span>
             <span></span>
@@ -41,7 +41,7 @@
         <template v-else>
           <div v-if="!code && !webstorm ">在你的机器上未检查到可以打开项目的工具，请安装或者检查环境变量</div>
           <div v-if="projects.length === 0">项目列表为空，请刷新或者检查工作空间</div>
-          <div v-else-if="uiType === 'tag'" class="ui-tag" @mouseenter='draged = true'>
+          <div v-else-if="uiConfig.uiType === 'tag'" class="ui-tag" @mouseenter='draged = true'>
             <div class='project-tags'>
               <template v-for="(t, i) in projects">
                 <div
@@ -55,21 +55,21 @@
                   @click="clickOpen(t)"
                   :class="[
                     {
-                      radius: radiusStyle,
+                      radius: uiConfig.radiusStyle,
                       draged: !t.opened && draged,
                       'animate__animated animate__bounceOut': t.opened
                     },
                     t.hot,
-                    t.dragHovered ? '' : `animate__animated animate__${t.matched ? t.matchedAnimate : t.appearAnimate}`,
+                    t.dragHovered ? '' : `animate__animated animate__${t.matched ? uiConfig.matchedAnimate : uiConfig.appearAnimate}`,
                   ]"
                   :title="`访问次数：${t.count}`"
                 >
-                  {{t.name}}{{t.showOpenCount ? ` | ${t.count}` : ''}}
+                  {{t.name}}{{uiConfig.showOpenCount ? ` | ${t.count}` : ''}}
                 </div>
               </template>
             </div>
           </div>
-          <div v-else-if="uiType === 'drag'" class="ui-drag" @mouseenter='draged = true'>
+          <div v-else-if="uiConfig.uiType === 'drag'" class="ui-drag" @mouseenter='draged = true'>
             <div class="ui-drag-tools">
               <a
                 data-role="tool"
@@ -155,24 +155,24 @@
                     @click="clickOpen(t)"
                     :class="[
                       {
-                        radius: radiusStyle,
+                        radius: uiConfig.radiusStyle,
                         draged: !t.opened && draged,
                         disabled: dragRole === 'project' && dragValue !== t.path,
                         hovering: dragRole !== 'project' && dropValue === t.path,
                         'animate__animated animate__bounceOut': t.opened
                       },
                       t.hot,
-                      t.dragHovered ? '' : `animate__animated animate__${t.matched ? t.matchedAnimate : t.appearAnimate}`,
+                      t.dragHovered ? '' : `animate__animated animate__${t.matched ? uiConfig.matchedAnimate : uiConfig.appearAnimate}`,
                     ]"
                     :title="`访问次数：${t.count}`"
                   >
-                    {{t.name}}{{t.showOpenCount ? ` | ${t.count}` : ''}}
+                    {{t.name}}{{uiConfig.showOpenCount ? ` | ${t.count}` : ''}}
                   </div>
                 </template>
               </div>
             </div>
           </div>
-          <table v-else-if="uiType === 'table'" class="ui-table" border='1' cellspacing='0' >
+          <table v-else-if="uiConfig.uiType === 'table'" class="ui-table" border='1' cellspacing='0' >
             <thead>
               <tr>
                 <th width="50%">项目</th>
@@ -184,7 +184,7 @@
               <template v-for="(t, i) in projects">
                 <tr v-show="t.show" :key='t.path'>
                   <td>
-                    <span class="project-name" @click="open(t.clickUseTool, t.path)">
+                    <span class="project-name" @click="open(uiConfig.clickUseTool, t.path)">
                       {{t.name}}
                     </span>
                   </td>
@@ -215,6 +215,7 @@
       </section>
     </section>
     <script src="../js/vue.min.js"></script>
+    <script src="./config.js"></script>
     <script src="./popup.js"></script>
   </body>
 </html>
