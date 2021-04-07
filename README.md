@@ -1,10 +1,11 @@
-# Rush-Go
+# Open-Dir
 
 chrome extension: scan your workspace list all projects, when you click one， will auto open vscode or webstorm...
 
-# 更新记录
+# ChangeLog
 
-- 0320 新增 vscode, webstorm 两种方式打开
+- 0320 
+  - 新增 vscode, webstorm 两种方式打开
 - 0401
   - 新增多个路径目录扫描
   - 新增打开次数(热度)统计
