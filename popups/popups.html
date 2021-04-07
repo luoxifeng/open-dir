@@ -26,13 +26,13 @@
         <input type="text" v-model="target" :class="{ radius: radiusStyle }"/>
       </section>
       <hr>
-      <section class="list">
+      <section class="main">
         <div v-if="fetching">请求项目列表中，请稍等</div>
         <div v-else-if="error">{{error}}</div>
         <template v-else>
           <div v-if="!code && !webstorm ">在你的机器上未检查到可以打开项目的工具，请安装或者检查环境变量</div>
           <div v-if="projects.length === 0">项目列表为空，请刷新或者检查工作空间</div>
-          <div v-else-if="uiType === 'block'" class="project-block" @mouseenter='draged = true'>
+          <div v-else-if="uiType === 'tag'" class="ui-tag" @mouseenter='draged = true'>
             <div class='project-tags'>
               <template v-for="(t, i) in projects">
                 <div
@@ -46,6 +46,7 @@
                   @click="clickOpen(t)"
                   :class="[
                     {
+                      radius: radiusStyle,
                       draged: !t.opened && draged,
                       'animate__animated animate__bounceOut': t.opened
                     },
@@ -59,8 +60,8 @@
               </template>
             </div>
           </div>
-          <div v-else-if="uiType === 'drag'" class="project-drag" @mouseenter='draged = true'>
-            <div class="project-drag-tools">
+          <div v-else-if="uiType === 'drag'" class="ui-drag" @mouseenter='draged = true'>
+            <div class="ui-drag-tools">
               <a
                 data-role="tool"
                 data-value="open"
@@ -126,7 +127,7 @@
                 <img src='../icons/sublime.png' class="tool-icon">
               </a>
             </div>
-            <div class='project-drag-tags'>
+            <div class='ui-drag-list'>
               <div class='project-tags'>
                 <template v-for="(t, i) in projects">
                   <div
@@ -162,7 +163,7 @@
               </div>
             </div>
           </div>
-          <table v-else-if="uiType === 'table'" border='1' cellspacing='0' class="projects-table">
+          <table v-else-if="uiType === 'table'" class="ui-table" border='1' cellspacing='0' >
             <thead>
               <tr>
                 <th width="50%">项目</th>
