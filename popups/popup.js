@@ -14,7 +14,6 @@ const debounce = (fun, time) => {
 }
 
 getCurrentTabId(id => {
-  // const bg = chrome.extension.getBackgroundPage();
   const getDragTarget = e => {
     let target = e.target;
     if (target.tagName ===  'IMG') target = e.target.parentElement
