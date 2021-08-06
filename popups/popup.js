@@ -48,10 +48,10 @@ getCurrentTabId(id => {
     watch: {
       target(val) {
         if (this.fetching) return;
-        const trimed = (val || '').trim();
+        const trimed = (val || '').trim().toLowerCase();
         this.draged = false;
         this.projects.forEach(t => {
-          t.show = t.name.includes(trimed);
+          t.show = t.name.toLowerCase().includes(trimed);
           t.matched = trimed && t.show
           t.dragHovered = false; // 是不是曾被drag hover 搜索的时候重置
           t.opened = false; // 是不是曾被打开过
