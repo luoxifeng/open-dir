@@ -104,3 +104,4 @@ dist
 .tern-port
 
 store.json
+paths.js

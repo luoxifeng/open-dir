@@ -1,4 +1,6 @@
 const path = require('path');
+const paths = require('./paths');
+
 
 /**
  * 动画效果的实现是使用animate.css
@@ -7,10 +9,7 @@ const path = require('path');
  */
 
 module.exports = {
-  paths: [
-    '/Users/guoying13/Documents/GitHub',
-    // '/Users/chongyang/github'
-  ],
+  paths,
   storeFile: path.resolve(__dirname, './store.json'),
   serverPort: 21319,
 }
